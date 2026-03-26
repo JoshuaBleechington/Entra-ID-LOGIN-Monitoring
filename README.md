@@ -1,4 +1,4 @@
-# Entra-ID-LOGIN-Monitoring
+
 # Entra ID Login Monitoring & Attack Visualization
 
 In this project, I implemented and configured **Microsoft Entra ID (Azure AD)** for Pursue SEO Marketing and built a real-time login monitoring solution integrated with **Microsoft Sentinel** to visualize global sign-in activity — including geographic attack sources — via an interactive heat map workbook.
