@@ -143,6 +143,7 @@ Sample verified login locations included Phoenix AZ, Los Angeles CA, New York NY
 ---
 
 ## Step 6) Findings — Failed & Blocked Attempts (Global)
+![signal-2025-11-17-211752_002](https://github.com/user-attachments/assets/39e1e77c-1a07-41ff-b9fd-340d9a16afbc)
 
 The monitoring period revealed **1,207 failed sign-in attempts** from 18 flagged countries. The heat map made it immediately clear that the organization was the target of ongoing, distributed credential-spraying campaigns.
 
