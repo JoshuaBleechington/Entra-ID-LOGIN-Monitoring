@@ -9,7 +9,8 @@ In this project, I implemented and configured **Microsoft Entra ID (Azure AD)** 
 
 ---
 
-![Login Heat Map](images/heatmap-dashboard.png)
+<img width="3440" height="1440" alt="Sentinel Workbook" src="https://github.com/user-attachments/assets/32edc530-2d4b-4fdf-bb71-89cfa21cbb22" />
+
 
 ---
 
