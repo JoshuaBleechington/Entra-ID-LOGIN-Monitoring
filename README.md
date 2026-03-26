@@ -115,7 +115,8 @@ A custom **Azure Monitor Workbook** was built in Microsoft Sentinel using the **
 - **Time range selector:** 24h / 7d / 30d toggle
 - **Metric label:** Country + LoginCount displayed on hover
 
-<img width="3440" height="1440" alt="Sentinel Workbook" src="https://github.com/user-attachments/assets/a712af59-2e20-418c-bf81-16259d15cb04" />
+<img width="3440" height="1440" alt="Sentinel Workbook" src="https://github.com/user-attachments/assets/40146b61-b166-4ab9-8b46-69deb46f1632" />
+
 
 
 
