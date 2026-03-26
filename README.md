@@ -114,7 +114,8 @@ A custom **Azure Monitor Workbook** was built in Microsoft Sentinel using the **
 - **Time range selector:** 24h / 7d / 30d toggle
 - **Metric label:** Country + LoginCount displayed on hover
 
-![Sentinel Workbook Map Settings](images/map-settings.png)
+<img width="3440" height="1440" alt="Heat map details" src="https://github.com/user-attachments/assets/96c22a51-52aa-4bef-a740-7bab69f5c619" />
+
 
 The workbook was pinned to the Sentinel dashboard and shared with leadership for ongoing visibility.
 
