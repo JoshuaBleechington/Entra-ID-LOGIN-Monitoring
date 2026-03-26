@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microsoft Sentinel — Pursue SEO Marketing</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; background:#f3f2f1; color:#323130; overflow:hidden; height:100vh; display:flex; flex-direction:column; }
+
+/* ── AZURE TOP BAR ── */
+.az-topbar {
+  height:48px; background:#0078d4; display:flex; align-items:center;
+  padding:0 12px; gap:12px; flex-shrink:0; z-index:100;
+}
+.az-hamburger { color:white; font-size:18px; cursor:pointer; padding:4px 8px; }
+.az-logo { display:flex; align-items:center; gap:6px; color:white; font-size:13px; font-weight:600; letter-spacing:-.2px; }
+.az-logo svg { width:20px; height:20px; }
+.az-search {
+  flex:1; max-width:380px; margin-left:20px;
+  background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3);
+  border-radius:2px; height:28px; padding:0 10px; color:white; font-size:12px;
+  display:flex; align-items:center; gap:6px;
+}
+.az-search span { color:rgba(255,255,255,0.7); font-size:11px; }
+.az-topbar-right { margin-left:auto; display:flex; align-items:center; gap:16px; }
+.az-topbar-icon { color:white; font-size:14px; cursor:pointer; opacity:.9; }
+.az-user { color:white; font-size:11px; display:flex; align-items:center; gap:6px; cursor:pointer; }
+.az-avatar { width:26px; height:26px; border-radius:50%; background:#d13438; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:11px; color:white; }
+
+/* ── BODY LAYOUT ── */
+.body-wrap { display:flex; flex:1; overflow:hidden; }
+
+/* ── LEFT NAV ── */
+.leftnav {
+  width:200px; background:#1b1a19; flex-shrink:0; display:flex; flex-direction:column;
+  overflow-y:auto; border-right:1px solid #333;
+}
+.leftnav-header {
+  padding:12px 14px; color:#fff; font-size:13px; font-weight:600;
+  border-bottom:1px solid #333; display:flex; align-items:center; gap:8px;
+}
+.leftnav-header .icon { font-size:16px; }
+.nav-section { padding-top:8px; }
+.nav-item {
+  display:flex; align-items:center; gap:8px; padding:7px 14px;
+  color:#c8c6c4; font-size:11.5px; cursor:pointer; transition:background .12s;
+}
+.nav-item:hover { background:#252423; color:white; }
+.nav-item.active { background:#252423; color:white; border-left:2px solid #0078d4; }
+.nav-item .nav-icon { font-size:13px; width:16px; text-align:center; flex-shrink:0; }
+.nav-sep { height:1px; background:#333; margin:6px 0; }
+.nav-group-label { padding:10px 14px 4px; color:#797775; font-size:10px; text-transform:uppercase; letter-spacing:.06em; }
+
+/* ── MAIN CONTENT ── */
+.main-content { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ── BREADCRUMB / WORKBOOK HEADER ── */
+.wb-topbar {
+  background:white; border-bottom:1px solid #edebe9; padding:0 16px;
+  display:flex; flex-direction:column;
+}
+.breadcrumb { padding:6px 0 2px; display:flex; align-items:center; gap:6px; color:#605e5c; font-size:11px; }
+.breadcrumb a { color:#0078d4; text-decoration:none; cursor:pointer; }
+.breadcrumb a:hover { text-decoration:underline; }
+.breadcrumb-sep { color:#a19f9d; }
+.wb-title-row { display:flex; align-items:center; gap:10px; padding:4px 0 8px; }
+.wb-title { font-size:18px; font-weight:600; color:#323130; }
+.wb-edit-icon { color:#0078d4; font-size:13px; cursor:pointer; }
+.wb-actions { display:flex; align-items:center; gap:8px; margin-left:8px; }
+.wb-btn {
+  display:flex; align-items:center; gap:4px;
+  padding:4px 12px; border:1px solid #8a8886; border-radius:2px;
+  background:white; color:#323130; font-size:11.5px; cursor:pointer;
+  transition:background .12s;
+}
+.wb-btn:hover { background:#f3f2f1; }
+.wb-btn.primary { background:#0078d4; color:white; border-color:#0078d4; }
+.wb-btn.primary:hover { background:#106ebe; }
+.wb-help { color:#605e5c; font-size:11px; display:flex; align-items:center; gap:4px; cursor:pointer; }
+.wb-help-btn { padding:4px 10px; border:1px solid #edebe9; border-radius:2px; background:white; font-size:11px; color:#323130; cursor:pointer; }
+.wb-help-btn:hover { background:#f3f2f1; }
+
+/* ── WORKBOOK TOOLBAR ── */
+.wb-toolbar {
+  background:white; border-bottom:1px solid #edebe9;
+  padding:4px 16px; display:flex; align-items:center; gap:4px; flex-shrink:0;
+}
+.wb-tool { padding:4px 8px; border-radius:2px; cursor:pointer; color:#605e5c; font-size:12px; display:flex; align-items:center; gap:4px; }
+.wb-tool:hover { background:#f3f2f1; }
+.wb-divider { width:1px; height:20px; background:#edebe9; margin:0 4px; }
+
+/* ── QUERY ITEM PANEL ── */
+.query-panel {
+  background:white; border:1px solid #edebe9; margin:12px; border-radius:2px;
+  flex-shrink:0; box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+.qp-header {
+  background:#f3f2f1; border-bottom:1px solid #edebe9;
+  padding:6px 12px; display:flex; align-items:center; gap:8px;
+}
+.qp-header-title { font-size:11.5px; font-weight:600; color:#323130; }
+.qp-tabs { display:flex; border-bottom:1px solid #edebe9; }
+.qp-tab {
+  padding:6px 14px; font-size:11.5px; color:#605e5c; cursor:pointer;
+  border-bottom:2px solid transparent; margin-bottom:-1px;
+}
+.qp-tab.active { color:#0078d4; border-bottom-color:#0078d4; font-weight:600; }
+.qp-tab:hover:not(.active) { color:#323130; background:#f3f2f1; }
+
+/* ── QUERY CONTROLS ── */
+.qp-controls {
+  display:flex; align-items:center; gap:0; padding:8px 12px;
+  border-bottom:1px solid #edebe9; flex-wrap:wrap; gap:8px;
+}
+.qp-control { display:flex; align-items:center; gap:6px; font-size:11.5px; color:#323130; }
+.qp-label { color:#605e5c; font-size:11px; }
+.qp-select {
+  border:1px solid #8a8886; border-radius:2px; padding:3px 24px 3px 8px;
+  font-size:11.5px; background:white; color:#323130; cursor:pointer;
+  appearance:none; background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23605e5c'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 6px center;
+}
+.qp-run { padding:4px 14px; background:#0078d4; color:white; border:none; border-radius:2px; font-size:11.5px; cursor:pointer; font-weight:600; }
+.qp-run:hover { background:#106ebe; }
+.qp-complete { padding:4px 10px; background:white; color:#323130; border:1px solid #8a8886; border-radius:2px; font-size:11.5px; cursor:pointer; }
+.map-settings-btn { padding:4px 10px; background:white; color:#0078d4; border:1px solid #0078d4; border-radius:2px; font-size:11.5px; cursor:pointer; margin-left:auto; }
+
+/* ── KQL EDITOR ── */
+.kql-wrap { padding:8px 12px; border-bottom:1px solid #edebe9; background:#faf9f8; }
+.kql-label { font-size:10px; color:#797775; margin-bottom:4px; }
+.kql-editor {
+  font-family:'Cascadia Code','Consolas',monospace; font-size:11.5px;
+  color:#323130; line-height:1.5; white-space:pre;
+}
+.kql-kw { color:#0000ff; }
+.kql-fn { color:#795e26; }
+.kql-str { color:#a31515; }
+.kql-op { color:#323130; }
+.kql-cmt { color:#008000; }
+
+/* ── MAP AREA + SETTINGS SPLIT ── */
+.map-settings-split { display:flex; flex:1; overflow:hidden; margin:0 12px 12px; gap:0; }
+
+/* ── MAP CONTAINER ── */
+.map-container {
+  flex:1; background:#1e2d3d; border:1px solid #edebe9;
+  position:relative; border-radius:2px 0 0 2px; overflow:hidden;
+  min-height:280px;
+}
+#map { width:100%; height:100%; }
+.leaflet-container { background:#1e2d3d !important; }
+.leaflet-tile-pane { filter:brightness(0.35) saturate(0.2); }
+.leaflet-control-zoom { display:none; }
+
+/* ── METRIC TILES ── */
+.metric-tiles {
+  background:#1e2d3d; border-top:1px solid #2d3f52;
+  display:flex; overflow-x:auto; flex-shrink:0; padding:6px 10px; gap:0;
+}
+.metric-tile {
+  flex-shrink:0; text-align:center; padding:4px 14px;
+  border-right:1px solid #2d3f52; min-width:80px;
+}
+.metric-tile:last-child { border-right:none; }
+.metric-tile-label { font-size:9.5px; color:#a19f9d; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:90px; }
+.metric-tile-value { font-size:15px; font-weight:600; color:white; }
+
+/* ── MAP SETTINGS PANEL ── */
+.map-settings-panel {
+  width:180px; flex-shrink:0; background:white;
+  border:1px solid #edebe9; border-left:none; border-radius:0 2px 2px 0;
+  overflow-y:auto; font-size:11px;
+}
+.msp-title {
+  padding:8px 10px; font-size:12px; font-weight:600; color:#323130;
+  border-bottom:1px solid #edebe9; background:#f3f2f1;
+  display:flex; align-items:center; gap:6px;
+}
+.msp-section { padding:8px 10px; border-bottom:1px solid #edebe9; }
+.msp-section-title { font-size:10px; font-weight:600; color:#323130; margin-bottom:6px; text-transform:uppercase; letter-spacing:.04em; }
+.msp-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
+.msp-key { color:#605e5c; font-size:10.5px; }
+.msp-val {
+  border:1px solid #8a8886; border-radius:2px; padding:2px 18px 2px 5px;
+  font-size:10.5px; color:#323130; background:white;
+  appearance:none; cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 8 5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23605e5c'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 4px center;
+  min-width:70px;
+}
+.msp-val-text { font-size:10.5px; color:#323130; }
+.msp-chip {
+  background:#0078d4; color:white; padding:1px 8px;
+  border-radius:10px; font-size:10px; font-weight:600;
+}
+.msp-input {
+  border:1px solid #8a8886; border-radius:2px; padding:2px 5px;
+  font-size:10.5px; width:60px; color:#323130;
+}
+.msp-color-row { display:flex; gap:4px; margin-top:4px; }
+.msp-color-dot { width:14px; height:14px; border-radius:50%; cursor:pointer; border:1px solid #edebe9; }
+.msp-toggle { display:flex; align-items:center; gap:6px; font-size:10.5px; color:#323130; margin-bottom:4px; cursor:pointer; }
+.msp-checkbox { width:12px; height:12px; border:1px solid #8a8886; border-radius:2px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:white; }
+.msp-checked { background:#0078d4; border-color:#0078d4; color:white; font-size:9px; }
+.msp-number { border:1px solid #8a8886; border-radius:2px; padding:2px 5px; font-size:10.5px; width:45px; }
+
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  background:white; border-top:1px solid #edebe9;
+  padding:6px 16px; display:flex; align-items:center; gap:8px; flex-shrink:0;
+}
+.bb-note { font-size:10.5px; color:#605e5c; display:flex; align-items:center; gap:4px; }
+.bb-note .info-icon { color:#0078d4; }
+.bb-spacer { flex:1; }
+.bb-btn { padding:4px 12px; border:1px solid #8a8886; border-radius:2px; background:white; font-size:11.5px; cursor:pointer; color:#323130; }
+.bb-btn:hover { background:#f3f2f1; }
+.bb-btn.primary { background:#0078d4; color:white; border-color:#0078d4; }
+.bb-btn.primary:hover { background:#106ebe; }
+.bb-btn.danger { color:#d13438; border-color:#d13438; }
+
+/* POPUP STYLES */
+.custom-popup .leaflet-popup-content-wrapper {
+  background:white; border:1px solid #edebe9; border-radius:2px;
+  box-shadow:0 4px 12px rgba(0,0,0,.2); padding:0; overflow:hidden;
+}
+.custom-popup .leaflet-popup-content { margin:0; font-family:'Segoe UI',sans-serif; }
+.custom-popup .leaflet-popup-tip { background:white; }
+.popup-inner { padding:10px 12px; min-width:160px; }
+.popup-title { font-size:12px; font-weight:600; color:#323130; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid #edebe9; }
+.popup-row { display:flex; gap:8px; font-size:11px; margin-bottom:3px; }
+.popup-k { color:#605e5c; min-width:60px; }
+.popup-v { color:#323130; font-weight:500; }
+.popup-v.s { color:#107c10; }
+.popup-v.f { color:#d13438; }
+
+/* scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:#f3f2f1; }
+::-webkit-scrollbar-thumb { background:#c8c6c4; border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- AZURE TOP BAR -->
+<div class="az-topbar">
+  <span class="az-hamburger">&#9776;</span>
+  <div class="az-logo">
+    <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="9" height="9" fill="white" opacity=".9"/><rect x="13" y="2" width="9" height="9" fill="white" opacity=".7"/><rect x="2" y="13" width="9" height="9" fill="white" opacity=".7"/><rect x="13" y="13" width="9" height="9" fill="white" opacity=".5"/></svg>
+    Microsoft Azure
+  </div>
+  <div class="az-search"><span>🔍</span><span>Search resources, services, and docs (G+/)</span></div>
+  <div class="az-topbar-right">
+    <span class="az-topbar-icon">🔔</span>
+    <span class="az-topbar-icon">⚙️</span>
+    <span class="az-topbar-icon">?</span>
+    <div class="az-user">
+      <div class="az-avatar">JB</div>
+      <span>JoshuaBleechington</span>
+    </div>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+<!-- LEFT NAV -->
+<div class="leftnav">
+  <div class="leftnav-header">
+    <span class="icon">🛡️</span> Microsoft Sentinel
+  </div>
+  <div class="nav-section">
+    <div class="nav-group-label">General</div>
+    <div class="nav-item"><span class="nav-icon">📋</span> Overview</div>
+    <div class="nav-item"><span class="nav-icon">📰</span> Logs</div>
+    <div class="nav-item"><span class="nav-icon">📰</span> News &amp; guides</div>
+    <div class="nav-sep"></div>
+    <div class="nav-group-label">Threat management</div>
+    <div class="nav-item"><span class="nav-icon">⚠️</span> Incidents</div>
+    <div class="nav-item"><span class="nav-icon">📊</span> Workbooks</div>
+    <div class="nav-item active"><span class="nav-icon">🗺️</span> Hunting</div>
+    <div class="nav-item"><span class="nav-icon">📓</span> Notebooks</div>
+    <div class="nav-item"><span class="nav-icon">🏢</span> Entity behavior</div>
+    <div class="nav-sep"></div>
+    <div class="nav-group-label">Content management</div>
+    <div class="nav-item"><span class="nav-icon">🔌</span> Data connectors</div>
+    <div class="nav-item"><span class="nav-icon">📐</span> Analytics</div>
+    <div class="nav-item"><span class="nav-icon">🔄</span> Automation</div>
+    <div class="nav-sep"></div>
+    <div class="nav-group-label">Log categories</div>
+    <div class="nav-item"><span class="nav-icon">📁</span> LogManagement</div>
+    <div class="nav-item active"><span class="nav-icon">📁</span> Microsoft Sentinel</div>
+    <div class="nav-item"><span class="nav-icon">📁</span> Security and Audit</div>
+    <div class="nav-item"><span class="nav-icon">📁</span> SecurityCorrelation</div>
+    <div class="nav-item"><span class="nav-icon">📁</span> Custom Logs</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- WORKBOOK HEADER -->
+  <div class="wb-topbar">
+    <div class="breadcrumb">
+      <a href="#">Microsoft Sentinel</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="#">Workbooks</a>
+    </div>
+    <div class="wb-title-row">
+      <span class="wb-title">Pursue SEO Marketing — Entra ID Login Monitor</span>
+      <span class="wb-edit-icon">✏️</span>
+      <div class="wb-actions">
+        <button class="wb-btn"><span>❓</span> Help me create my first Azure Workbook</button>
+        <button class="wb-btn">How to interpret leverage Workbooks?</button>
+        <button class="wb-btn">Query recent Azure Monitor workbooks changes</button>
+      </div>
+      <div style="margin-left:auto; display:flex; gap:6px;">
+        <button class="wb-btn primary">✏️ Edit</button>
+        <button class="wb-btn">💾 Save</button>
+        <button class="wb-btn">📌 Pin</button>
+        <button class="wb-btn">🔄 Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKBOOK TOOLBAR -->
+  <div class="wb-toolbar">
+    <div class="wb-tool">➕ Add</div>
+    <div class="wb-tool">✏️ Edit</div>
+    <div class="wb-divider"></div>
+    <div class="wb-tool">↶</div>
+    <div class="wb-tool">↷</div>
+    <div class="wb-tool">📐 Layout</div>
+    <div class="wb-tool">🖥️</div>
+    <div class="wb-divider"></div>
+    <div class="wb-tool">?</div>
+  </div>
+
+  <!-- QUERY ITEM PANEL -->
+  <div class="query-panel">
+    <div class="qp-header">
+      <span style="color:#0078d4;">⬛</span>
+      <span class="qp-header-title">Setting query Item &nbsp; query - 1</span>
+    </div>
+    <div class="qp-tabs">
+      <div class="qp-tab active">Settings</div>
+      <div class="qp-tab">Advanced Settings</div>
+      <div class="qp-tab">Style</div>
+    </div>
+    <div class="qp-controls">
+      <div class="qp-control">
+        <span class="qp-label">Change:</span>
+        <button class="qp-run">▶ Run Query</button>
+        <button class="qp-complete">Complete</button>
+      </div>
+      <div class="qp-control">
+        <span class="qp-label">Time Range:</span>
+        <select class="qp-select"><option>Last 30 days</option><option>Last 7 days</option><option>Last 24 hours</option></select>
+      </div>
+      <div class="qp-control">
+        <span class="qp-label">Visualization:</span>
+        <select class="qp-select"><option>Map</option><option>Table</option><option>Bar chart</option></select>
+      </div>
+      <div class="qp-control">
+        <span class="qp-label">Size:</span>
+        <select class="qp-select"><option>Full</option><option>Medium</option><option>Small</option></select>
+      </div>
+      <button class="map-settings-btn">🗺 Map Settings</button>
+    </div>
+    <div class="kql-wrap">
+      <div class="kql-label">Log Analytics Workspace (PursueSEO-Prod) Query</div>
+      <div class="kql-editor"><span class="kql-kw">SigninLogs</span>
+<span class="kql-op">|</span> <span class="kql-kw">summarize</span> LoginCount <span class="kql-op">=</span> <span class="kql-fn">count</span>() <span class="kql-kw">by</span> Identity, Latitude <span class="kql-op">=</span> <span class="kql-fn">tostring</span>(LocationDetails[<span class="kql-str">"geoCoordinates"</span>][<span class="kql-str">"latitude"</span>]), Longitude <span class="kql-op">=</span> <span class="kql-fn">tostring</span>(LocationDetails[<span class="kql-str">"geoCoordinates"</span>][<span class="kql-str">"longitude"</span>]), City <span class="kql-op">=</span> <span class="kql-fn">tostring</span>(LocationDetails[<span class="kql-str">"city"</span>]), Country <span class="kql-op">=</span> <span class="kql-fn">tostring</span>(LocationDetails[<span class="kql-str">"countryOrRegion"</span>])
+<span class="kql-op">|</span> <span class="kql-kw">extend</span> friendly_label <span class="kql-op">=</span> <span class="kql-fn">strcat</span>(<span class="kql-str">"  - "</span>, City, <span class="kql-str">", "</span>, Country)</div>
+    </div>
+  </div>
+
+  <!-- MAP + SETTINGS -->
+  <div class="map-settings-split">
+
+    <div class="map-container" id="mapWrap">
+      <div id="map"></div>
+      <!-- metric tiles inside map -->
+      <div class="metric-tiles" id="metricTiles"></div>
+    </div>
+
+    <!-- MAP SETTINGS PANEL -->
+    <div class="map-settings-panel">
+      <div class="msp-title">🗺 Map Settings</div>
+
+      <div class="msp-section">
+        <div class="msp-section-title">Layout Settings</div>
+        <div class="msp-row"><span class="msp-key">Latitude</span><select class="msp-val"><option>Latitude</option></select></div>
+        <div class="msp-row"><span class="msp-key">Longitude</span><select class="msp-val"><option>Longitude</option></select></div>
+        <div class="msp-row"><span class="msp-key">Size by</span><select class="msp-val"><option>LoginCount</option></select></div>
+        <div class="msp-row"><span class="msp-key">Label</span><select class="msp-val"><option>friendly_label</option></select></div>
+        <div class="msp-row"><span class="msp-key">Min region</span><input class="msp-input" value="2" type="number"></div>
+        <div class="msp-row"><span class="msp-key">Max region</span><input class="msp-input" value="25" type="number"></div>
+        <div class="msp-row"><span class="msp-key">Min value</span><input class="msp-input" value="0" type="number"></div>
+        <div class="msp-row"><span class="msp-key">Max value</span><input class="msp-input" value="" type="number" placeholder="auto"></div>
+        <div class="msp-row"><span class="msp-key">Opacity</span><input class="msp-input" value="0.8" type="number" step=".1"></div>
+      </div>
+
+      <div class="msp-section">
+        <div class="msp-section-title">Color Settings</div>
+        <div class="msp-row"><span class="msp-key">Coloring Type</span></div>
+        <div style="margin-bottom:6px;">
+          <span class="msp-chip">Heatmap</span>
+        </div>
+        <div class="msp-row"><span class="msp-key">Color by</span><select class="msp-val"><option>LoginCount</option></select></div>
+        <div class="msp-row"><span class="msp-key">Aggregation</span><select class="msp-val"><option>Sum</option></select></div>
+        <div class="msp-row"><span class="msp-key">Color palette</span></div>
+        <div class="msp-color-row">
+          <div class="msp-color-dot" style="background:#107c10;"></div>
+          <div class="msp-color-dot" style="background:#ffb900;"></div>
+          <div class="msp-color-dot" style="background:#d13438; border:2px solid #323130;"></div>
+          <div class="msp-color-dot" style="background:#0078d4;"></div>
+          <div class="msp-color-dot" style="background:#881798;"></div>
+        </div>
+        <div style="margin-top:6px;">
+          <div class="msp-row"><span class="msp-key">Min value</span><input class="msp-input" value=""></div>
+          <div class="msp-row"><span class="msp-key">Max value</span><input class="msp-input" value=""></div>
+        </div>
+      </div>
+
+      <div class="msp-section">
+        <div class="msp-section-title">Metric Settings</div>
+        <div class="msp-row"><span class="msp-key">Metric label</span><select class="msp-val"><option>Country</option></select></div>
+        <div class="msp-row"><span class="msp-key">Metric value</span><select class="msp-val"><option>LoginCount</option></select></div>
+        <div class="msp-row"><span class="msp-key">Create others</span></div>
+        <div class="msp-toggle">
+          <div class="msp-checkbox msp-checked">✓</div> group other
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <span class="bb-note"><span class="info-icon">ℹ️</span> Results were limited to the last 100 rows.</span>
+    <div class="bb-spacer"></div>
+    <button class="bb-btn primary">Done Editing</button>
+    <button class="bb-btn">Cancel</button>
+    <button class="bb-btn">➕ Add</button>
+    <button class="bb-btn">⬆ Move</button>
+    <button class="bb-btn">📋 Clone</button>
+    <button class="bb-btn danger">🗑 Remove</button>
+  </div>
+
+</div><!-- /main-content -->
+</div><!-- /body-wrap -->
+
+<script>
+// ── MAP INIT ────────────────────────────────────────────────────────────────
+const map = L.map('map', {
+  center: [25, 15], zoom: 2,
+  zoomControl: false, attributionControl: false
+});
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+// ── DATA ────────────────────────────────────────────────────────────────────
+const successData = [
+  { lat:33.4484, lon:-112.0740, city:"Phoenix, AZ",       user:"m.johnson@pursueseo.com",  count:8 },
+  { lat:33.5779, lon:-112.1733, city:"Glendale, AZ",      user:"k.smith@pursueseo.com",    count:4 },
+  { lat:33.4152, lon:-111.8315, city:"Tempe, AZ",         user:"r.davis@pursueseo.com",    count:3 },
+  { lat:33.3528, lon:-111.7890, city:"Chandler, AZ",      user:"l.garcia@pursueseo.com",   count:3 },
+  { lat:34.0522, lon:-118.2437, city:"Los Angeles, CA",   user:"j.wilson@pursueseo.com",   count:4 },
+  { lat:37.7749, lon:-122.4194, city:"San Francisco, CA", user:"b.martinez@pursueseo.com", count:2 },
+  { lat:40.7128, lon:-74.0060,  city:"New York, NY",      user:"e.jackson@pursueseo.com",  count:3 },
+  { lat:41.8781, lon:-87.6298,  city:"Chicago, IL",       user:"f.white@pursueseo.com",    count:2 },
+  { lat:29.7604, lon:-95.3698,  city:"Houston, TX",       user:"g.harris@pursueseo.com",   count:3 },
+  { lat:47.6062, lon:-122.3321, city:"Seattle, WA",       user:"k.walker@pursueseo.com",   count:2 },
+  { lat:25.7617, lon:-80.1918,  city:"Miami, FL",         user:"p.king@pursueseo.com",     count:2 },
+  { lat:38.9072, lon:-77.0369,  city:"Washington, DC",    user:"r.scott@pursueseo.com",    count:2 },
+  { lat:39.7392, lon:-104.9903, city:"Denver, CO",          user:"m.allen@pursueseo.com",    count:2 },
+  { lat:17.3850, lon:78.4867,   city:"Hyderabad, India",    user:"a.kumar@pursueseo.com",    count:4 },
+  { lat:17.4010, lon:78.4740,   city:"Hyderabad, India",    user:"p.reddy@pursueseo.com",    count:3 },
+  { lat:17.3700, lon:78.5100,   city:"Hyderabad, India",    user:"s.rao@pursueseo.com",      count:2 },
+];
+
+const failData = [
+  { lat:55.7558, lon:37.6173,   city:"Moscow",       country:"Russia",     count:298, ip:"46.29.248.11"   },
+  { lat:59.9343, lon:30.3351,   city:"St.Petersburg", country:"Russia",    count:189, ip:"46.29.100.22"   },
+  { lat:39.9042, lon:116.4074,  city:"Beijing",      country:"China",      count:211, ip:"103.72.14.8"    },
+  { lat:31.2304, lon:121.4737,  city:"Shanghai",     country:"China",      count:107, ip:"103.72.20.15"   },
+  { lat:13.7563, lon:100.5018,  city:"Bangkok",      country:"Thailand",   count:142, ip:"171.97.10.14"   },
+  { lat:35.6892, lon:51.3890,   city:"Tehran",       country:"Iran",       count:98,  ip:"5.62.40.8"      },
+  { lat:-16.500, lon:-68.150,   city:"La Paz",       country:"Bolivia",    count:71,  ip:"190.252.14.9"   },
+  { lat:39.0194, lon:125.7381,  city:"Pyongyang",    country:"N. Korea",   count:54,  ip:"175.45.176.1"   },
+  { lat:-23.550, lon:-46.633,   city:"São Paulo",    country:"Brazil",     count:37,  ip:"177.8.100.14"   },
+  { lat:6.5244,  lon:3.3792,    city:"Lagos",        country:"Nigeria",    count:29,  ip:"41.206.40.22"   },
+  { lat:44.4268, lon:26.1025,   city:"Bucharest",    country:"Romania",    count:22,  ip:"89.46.14.8"     },
+  { lat:54.9885, lon:82.9207,   city:"Novosibirsk",  country:"Russia",     count:55,  ip:"46.29.120.44"   },
+];
+
+// ── PLOT SUCCESS ─────────────────────────────────────────────────────────────
+successData.forEach(d => {
+  const r = Math.min(6 + d.count * 0.7, 14);
+  L.circleMarker([d.lat, d.lon], {
+    radius: r, fillColor:'#107c10', color:'#54b054',
+    weight:1.5, opacity:1, fillOpacity:0.82
+  }).bindPopup(`<div class="popup-inner">
+    <div class="popup-title">✅ Successful Sign-In</div>
+    <div class="popup-row"><span class="popup-k">Identity</span><span class="popup-v s">${d.user}</span></div>
+    <div class="popup-row"><span class="popup-k">Location</span><span class="popup-v">${d.city}</span></div>
+    <div class="popup-row"><span class="popup-k">Count</span><span class="popup-v s">${d.count}</span></div>
+    <div class="popup-row"><span class="popup-k">Result</span><span class="popup-v s">Success (0)</span></div>
+  </div>`, {className:'custom-popup'}).addTo(map);
+});
+
+// ── PLOT FAILURES ─────────────────────────────────────────────────────────────
+failData.forEach(d => {
+  const r = Math.min(7 + Math.sqrt(d.count) * 0.9, 22);
+  const col = d.count > 150 ? '#ffb900' : '#d13438';
+  const border = d.count > 150 ? '#ff8c00' : '#a80000';
+  L.circleMarker([d.lat, d.lon], {
+    radius: r, fillColor: col, color: border,
+    weight:1.5, opacity:1, fillOpacity:0.82
+  }).bindPopup(`<div class="popup-inner">
+    <div class="popup-title">❌ Failed Sign-In</div>
+    <div class="popup-row"><span class="popup-k">Location</span><span class="popup-v">${d.city}, ${d.country}</span></div>
+    <div class="popup-row"><span class="popup-k">Count</span><span class="popup-v f">${d.count}</span></div>
+    <div class="popup-row"><span class="popup-k">Sample IP</span><span class="popup-v">${d.ip}</span></div>
+    <div class="popup-row"><span class="popup-k">Result</span><span class="popup-v f">Failure — Blocked</span></div>
+  </div>`, {className:'custom-popup'}).addTo(map);
+});
+
+// ── METRIC TILES ──────────────────────────────────────────────────────────────
+const tiles = [
+  { label:"Other",              value:"22.9k" },
+  { label:"ba197502505206...",  value:"1.23k" },
+  { label:"b03ac7ba4704e7...",  value:"803"   },
+  { label:"df4ac240470a...",    value:"789"   },
+  { label:"d97ba4c087...",      value:"682"   },
+  { label:"5ecc175165d...",     value:"494"   },
+  { label:"c47500ab4cf...",     value:"454"   },
+  { label:"a47bc00500c...",     value:"375"   },
+  { label:"82c50040bdf...",     value:"276"   },
+  { label:"e40050aaff0...",     value:"271"   },
+];
+
+const tilesEl = document.getElementById('metricTiles');
+tiles.forEach(t => {
+  const div = document.createElement('div');
+  div.className = 'metric-tile';
+  div.innerHTML = `<div class="metric-tile-label">${t.label}</div><div class="metric-tile-value">${t.value}</div>`;
+  tilesEl.appendChild(div);
+});
+
+// ── LAYOUT: map-container should flex-grow minus tiles ────────────────────────
+// The tile bar is inside map-container, so let's restructure its height
+const mapContainer = document.getElementById('mapWrap');
+const mapEl = document.getElementById('map');
+const tilesHeight = 52;
+function resizeMap() {
+  const h = mapContainer.clientHeight - tilesHeight;
+  mapEl.style.height = h + 'px';
+  map.invalidateSize();
+}
+resizeMap();
+window.addEventListener('resize', resizeMap);
+</script>
+</body>
+</html>
