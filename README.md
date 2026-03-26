@@ -41,6 +41,7 @@ In this project, I implemented and configured **Microsoft Entra ID (Azure AD)** 
 ---
 
 ## Project Overview & Objectives
+<img width="638" height="636" alt="Screenshot 2025-11-17 213000" src="https://github.com/user-attachments/assets/54f9a367-4080-4f0a-b430-83b870a67571" />
 
 After deploying **Microsoft Entra ID** as the organization's identity provider, I identified a need to monitor authentication events for anomalous activity. The primary objectives were:
 
