@@ -9,7 +9,8 @@ In this project, I implemented and configured **Microsoft Entra ID (Azure AD)** 
 
 ---
 
-<img width="3440" height="1440" alt="Sentinel Workbook" src="https://github.com/user-attachments/assets/32edc530-2d4b-4fdf-bb71-89cfa21cbb22" />
+<img width="2752" height="1536" alt="Brute Force Bear" src="https://github.com/user-attachments/assets/c48416b8-07b3-4f13-8c29-1588dd6dd823" />
+
 
 
 ---
