@@ -132,10 +132,10 @@ Over the 30-day monitoring window, **40 successful authentication events** were 
 
 | Metric | Value |
 |---|---|
-| Total Successful Logins | 40 |
+| Total Successful Logins | 43 |
 | Countries of Origin | 1 (United States) |
 | MFA Passed Rate | 100% |
-| Conditional Access — Compliant | 40 / 40 |
+| Conditional Access — Compliant | 43 / 43 |
 | Flagged for Review | 0 |
 
 Sample verified login locations included Phoenix AZ, Los Angeles CA, New York NY, Dallas TX, Chicago IL, Seattle WA, and Miami FL — consistent with employee home and office locations.
@@ -172,7 +172,7 @@ The monitoring period revealed **1,207 failed sign-in attempts** from 18 flagged
 
 The high MFA block count confirms that **MFA enforcement was actively stopping otherwise valid stolen credentials** from being used — a key indicator that credential lists from data breaches were being tested against the environment.
 
-![Failure Breakdown](images/failure-breakdown.png)
+
 
 ---
 
@@ -204,13 +204,14 @@ These policies reduced the volume of authentication attempts reaching the MFA ch
 | Metric | Value |
 |---|---|
 | Total Sign-In Events (30 days) | 1,247 |
-| Successful Logins | 40 |
+| Successful Logins | 43 |
 | Failed / Blocked Attempts | 1,207 |
 | Countries Flagged | 18 |
 | MFA Challenges Issued | 892 |
 | Conditional Access Blocks | 198 |
 | Accounts at Risk (Identity Protection) | 0 confirmed |
 | Credential Spray Campaigns Identified | 3 distinct patterns |
+<img width="856" height="860" alt="Screenshot 2025-11-17 212602" src="https://github.com/user-attachments/assets/8b8ef95e-10b0-4b4e-a29e-11855b7f1157" />
 
 No employee accounts were successfully compromised during the monitoring window. The combination of MFA enforcement, Conditional Access geo-blocking, and legacy protocol blocking provided effective layered defense.
 
