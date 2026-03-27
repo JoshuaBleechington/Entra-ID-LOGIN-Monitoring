@@ -128,7 +128,7 @@ The workbook was pinned to the Sentinel dashboard and shared with leadership for
 ## Step 5) Findings — Successful Logins (USA)
 <img width="3440" height="1440" alt="Heat map details" src="https://github.com/user-attachments/assets/18412469-5389-4337-8843-23010abecba0" />
 
-Over the 30-day monitoring window, **40 successful authentication events** were recorded. All originated from verified U.S.-based IP addresses belonging to known employees.
+Over the 30-day monitoring window, **43 successful authentication events** were recorded. All originated from verified U.S.-based IP addresses belonging to known employees.
 
 | Metric | Value |
 |---|---|
