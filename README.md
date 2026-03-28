@@ -6,7 +6,7 @@ In this project, I implemented and configured **Microsoft Entra ID (Azure AD)** 
 **Inception State:** The organization had no identity governance, no centralized authentication monitoring, and no visibility into failed sign-in attempts or brute-force activity against corporate accounts.
 
 **Completion State:** Entra ID deployed with Conditional Access policies, MFA enforcement, and a Sentinel workbook providing real-time geolocation mapping of all sign-in events across the environment.
-
+> 🗺️ **[View Interactive Login Heat Map →](https://joshuableechington.github.io/Entra-ID-LOGIN-Monitoring/login-heatmap.html)**
 ---
 
 <img width="2752" height="1536" alt="Brute Force Bear" src="https://github.com/user-attachments/assets/c48416b8-07b3-4f13-8c29-1588dd6dd823" />
