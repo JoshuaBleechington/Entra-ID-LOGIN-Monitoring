@@ -9,7 +9,8 @@ In this project, I implemented and configured **Microsoft Entra ID (Azure AD)** 
 > 🗺️ **[View Interactive Login Heat Map →](https://joshuableechington.github.io/Entra-ID-LOGIN-Monitoring/login-heatmap.html)**
 ---
 
-<img width="2752" height="1536" alt="Brute Force Bear" src="https://github.com/user-attachments/assets/c48416b8-07b3-4f13-8c29-1588dd6dd823" />
+<img width="1376" height="768" alt="Brute force bear attack" src="https://github.com/user-attachments/assets/7a19c5e4-0629-4831-ab7e-3129b6bd9d43" />
+
 
 
 
